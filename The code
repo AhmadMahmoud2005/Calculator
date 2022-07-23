@@ -1,0 +1,36 @@
+import re
+from sys import exit
+
+# First: Request the user input
+string = input("Input: ")
+
+# Second: Validate the input
+if re.search(r"([+-][-+])+|([()][()])+|[^0-9 ()]+[ ]*[+][ ]*[(]", string) or re.search(r"[^+0-9-)( ]+", string):
+    print("Invalid Syntax")
+    exit(1)
+
+# Third: Perform the User's Operation
+string = string.replace(" ", "")
+tmp = list(string)
+
+if re.search(r"-[(]", string):
+    i = string.index("-(") + 1
+    while tmp[i] != ")":
+        if tmp[i] == "+": tmp[i] = "-"
+        elif tmp[i] == "-": tmp[i] = "+"
+        i += 1
+
+string = "".join(tmp)
+string = string.replace("(", "")
+string = string.replace(")", "")
+string = string.split("+")
+
+result = 0
+for element in string:
+    if len(element) > 1:
+        tmp = element.split("-")
+        for i, num in enumerate(tmp):
+            result += int(num) if i == 0 else -int(num) 
+    else: result += int(element)
+
+print("Output: " + str(result))
